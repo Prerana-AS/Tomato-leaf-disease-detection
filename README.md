@@ -1,45 +1,51 @@
 
 # 🍅 Tomato Leaf Disease Detection
 
-A **Streamlit-based web app** that detects diseases in **tomato leaves** using a **deep learning model (InceptionV3)**.
-Upload an image of a tomato leaf, and the app predicts the type of disease instantly.
+A **CNN-based model** using **TensorFlow** and **Streamlit** to detect tomato leaf diseases from images. Trained on the **New Plant Diseases Dataset (Augmented)** from Kaggle.
 
 ---
 
-## 🌿 Overview
+## 🧠 Model Summary
 
-This project helps farmers and researchers identify **tomato leaf diseases** early using image classification.
-The model is trained using **transfer learning (InceptionV3)** on a tomato disease dataset.
+Custom **Convolutional Neural Network (CNN)**
 
----
-
-## 🧠 Model
-
-* Model: **InceptionV3 (Keras / TensorFlow)**
-* Type: **Image Classification**
-* Accuracy: ~94%
-* Model file: `model_inception.h5`
-  *(Stored on Google Drive due to file size limit — downloaded automatically in the app.)*
-  [Download model manually](https://drive.google.com/file/d/1M502iP248Ivu417jdzYafUdH6C3qThEI/view?usp=sharing)
+* Conv2D (32, 3×3) → MaxPool
+* Conv2D (64, 3×3) → MaxPool
+* Flatten → Dense(128, ReLU) → Dropout(0.5) → Dense(10, Softmax)
+* **Total Params:** 7.39M
 
 ---
 
-## ⚙️ Installation
+## 📊 Dataset
 
-### 1️⃣ Clone the repository
+**Classes (10):**
+Bacterial spot, Early blight, Late blight, Leaf Mold, Septoria spot, Spider mites, Target Spot, Yellow Leaf Curl Virus, Mosaic Virus, Healthy
 
-```bash
-git clone https://github.com/Prerana-AS/tomato-leaf-disease-detection.git
-cd tomato-leaf-disease-detection
-```
+Images resized to **128×128** and normalized.
 
-### 2️⃣ Install dependencies
+---
 
-```bash
-pip install -r requirements.txt
-```
+## ⚙️ Training
 
-### 3️⃣ Run the app
+* Epochs: 10
+* Batch Size: 32
+
+**Test Accuracy:** ✅ **88.92%**
+
+---
+
+## 📈 Results
+
+* Stable accuracy and loss curves
+* Confusion matrix plotted for performance visualization
+
+---
+
+## 💻 Streamlit App
+
+Upload a tomato leaf image → Predict disease → View confidence
+
+Run:
 
 ```bash
 streamlit run app.py
@@ -47,23 +53,12 @@ streamlit run app.py
 
 ---
 
-## 🖥️ How to Use
+## 🧩 Tech Used
 
-1. Run the Streamlit app.
-2. Upload an image of a tomato leaf.
-3. The model will display the predicted disease name and confidence.
+TensorFlow · Keras · Streamlit · NumPy · Matplotlib · scikit-learn
 
 ---
 
-## 🧩 Technologies Used
-
-* **Python**
-* **Streamlit**
-* **TensorFlow / Keras**
-* **OpenCV, NumPy**
-* **gdown (for model download)**
-  
----
 
 ## 👩‍💻 Author
 
