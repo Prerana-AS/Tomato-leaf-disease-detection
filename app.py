@@ -1,72 +1,104 @@
 import streamlit as st
-from tensorflow.keras.models import load_model
+import tensorflow as tf
 from tensorflow.keras.preprocessing import image
 import numpy as np
 from PIL import Image
+import json
 import os
-import gdown  # for downloading model from Google Drive
+import gdown
 
-st.set_page_config(page_title="Tomato Disease Detector 🍅", layout="centered")
+# Import DTypePolicy from Keras 3 (for compatibility)
+try:
+    from keras.dtype_policies import DTypePolicy
+except ImportError:
+    st.error("Keras 3 not installed. Run 'pip install --upgrade keras' and restart.")
+    st.stop()
 
-st.title("🍅 Tomato Leaf Disease Detection")
-# Google Drive model setup
-MODEL_PATH = "model_inception.h5"
-DRIVE_LINK = "https://drive.google.com/uc?id=1M502iP248Ivu417jdzYafUdH6C3qThEI"
+# 🏷️ Title
+st.title("🍅 Tomato Disease Detection")
 
-# Download model automatically if not present
+# 📁 Model path
+MODEL_PATH = "tomato_disease_model.h5"
+
+# Replace with your Google Drive file ID
+FILE_ID = "1uUP-IPSgeIJxm0AmZiGaJZuR1UShoHWA"
 if not os.path.exists(MODEL_PATH):
-    st.info("Downloading model... Please wait ⏳")
-    gdown.download(DRIVE_LINK, MODEL_PATH, quiet=False)
-    st.success("Model downloaded successfully ✅")
+    st.info("⏬ Downloading model from Google Drive...")
+    gdown.download(f"https://drive.google.com/uc?id={FILE_ID}", MODEL_PATH, quiet=False)
+    st.success("✅ Model downloaded successfully!")
 
+# ✅ Custom InputLayer to fix old model config issues
+from tensorflow.keras.layers import InputLayer
 
+class CustomInputLayer(InputLayer):
+    @classmethod
+    def from_config(cls, config):
+        if 'batch_shape' in config:
+            config['batch_input_shape'] = config.pop('batch_shape')
+        return super().from_config(config)
 
-# Load model once
 @st.cache_resource
-def load_tomato_model():
-    return load_model("model_inception.h5")
+def load_model_cached():
+    model = tf.keras.models.load_model(
+        MODEL_PATH,
+        compile=False,
+        custom_objects={
+            'InputLayer': CustomInputLayer,
+            'DTypePolicy': DTypePolicy
+        }
+    )
+    return model
 
-model = load_tomato_model()
+model = load_model_cached()
 
-# Class labels (your dataset order)
-class_names = [
-    'Tomato___Tomato_mosaic_virus',
-    'Tomato___Early_blight',
-    'Tomato___Septoria_leaf_spot',
-    'Tomato___Bacterial_spot',
-    'Tomato___Target_Spot',
-    'Tomato___Spider_mites Two-spotted_spider_mite',
-    'Tomato___Tomato_Yellow_Leaf_Curl_Virus',
-    'Tomato___Late_blight',
-    'Tomato___healthy',
-    'Tomato___Leaf_Mold'
-]
+# 🗂️ Load class names
+try:
+    with open("class_indices.json", "r") as f:
+        class_indices = json.load(f)
+    class_names = list(class_indices.keys())
+except Exception as e:
+    st.error(f"Error loading class names: {e}")
+    class_names = [
+        "Tomato___Bacterial_spot",
+        "Tomato___Early_blight",
+        "Tomato___Late_blight",
+        "Tomato___Leaf_Mold",
+        "Tomato___Septoria_leaf_spot",
+        "Tomato___Spider_mites_Two_spotted_spider_mite",
+        "Tomato___Target_Spot",
+        "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+        "Tomato___Tomato_mosaic_virus",
+        "Tomato___healthy"
+    ]
 
-uploaded_file = st.file_uploader("📷 Choose a tomato leaf image...", type=["jpg", "jpeg", "png"])
+# 📤 File uploader
+uploaded_file = st.file_uploader("Upload a tomato leaf image", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    img = Image.open(uploaded_file).convert('RGB')
-    st.image(img, caption="Uploaded Leaf Image", use_column_width=True)
+    img = Image.open(uploaded_file).resize((128, 128))
+    st.image(img, caption="Uploaded Image", use_container_width=True)
 
-    # Preprocess
-    img = img.resize((224, 224))  # match model input
-    img_array = np.array(img) / 255.0
-    img_array = np.expand_dims(img_array, axis=0)
+    if st.button("🔍 Predict Disease"):
+        # Preprocess image
+        img_array = image.img_to_array(img)
+        img_array = np.expand_dims(img_array, axis=0)
+        img_array /= 255.0
 
-    # Predict
-    with st.spinner("Analyzing the leaf..."):
+        # Make prediction
         prediction = model.predict(img_array)
-        class_index = np.argmax(prediction)
+        class_index = np.argmax(prediction, axis=1)[0]
+        predicted_class = class_names[class_index]
         confidence = np.max(prediction) * 100
 
-    st.success(f"✅ **Predicted Disease:** {class_names[class_index]}")
-    st.info(f"📊 **Confidence:** {confidence:.2f}%")
+        # Display result
+        st.success(f"🌿 Predicted Disease: **{predicted_class}**")
+        st.info(f"🧠 Confidence: {confidence:.2f}%")
 
-    if "healthy" in class_names[class_index].lower():
-        st.balloons()
-        st.write("🎉 The plant looks healthy!")
-    else:
-        st.warning("⚠️ The plant seems affected. Consider checking treatment options.")
+        if "healthy" in predicted_class.lower():
+            st.balloons()
+            st.write("🎉 The plant looks healthy!")
+        else:
+            st.warning("⚠️ The plant seems affected. Consider checking treatment options.")
 
 st.markdown("---")
-st.caption("Developed by Prerana 🌱 | Powered by TensorFlow & Streamlit")
+st.caption("Developed by Prerana A S")
