@@ -73,6 +73,39 @@ except Exception as e:
 
 # 📤 File uploader
 uploaded_file = st.file_uploader("Upload a tomato leaf image", type=["jpg", "jpeg", "png"])
+# 🌿 Remedies for each tomato leaf disease
+remedies = {
+    "Tomato___Bacterial_spot": 
+    "• Remove infected leaves.\n• Apply copper-based bactericides.\n• Avoid overhead watering.\n• Practice crop rotation.",
+
+    "Tomato___Early_blight": 
+    "• Remove affected leaves.\n• Spray copper fungicide.\n• Maintain proper spacing between plants.\n• Avoid wetting leaves.",
+
+    "Tomato___Late_blight":
+    "• Remove and destroy infected plants.\n• Apply mancozeb or chlorothalonil.\n• Improve air circulation.\n• Avoid overhead irrigation.",
+
+    "Tomato___Leaf_Mold":
+    "• Increase ventilation.\n• Apply sulfur or copper fungicide.\n• Keep leaves dry.",
+
+    "Tomato___Septoria_leaf_spot":
+    "• Remove infected leaves.\n• Use copper fungicides.\n• Use drip irrigation.",
+
+    "Tomato___Spider_mites_Two_spotted_spider_mite":
+    "• Spray neem oil.\n• Increase humidity.\n• Remove heavily infested leaves.",
+
+    "Tomato___Target_Spot":
+    "• Apply azoxystrobin or mancozeb.\n• Keep foliage dry.\n• Remove diseased leaves.",
+
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus":
+    "• No cure.\n• Remove infected plants.\n• Control whiteflies using neem oil.\n• Use resistant varieties.",
+
+    "Tomato___Tomato_mosaic_virus":
+    "• No direct cure.\n• Remove infected plants.\n• Disinfect hands and tools.\n• Avoid tobacco products near plants.",
+
+    "Tomato___healthy":
+    "• Plant is healthy! Continue regular watering, sunlight and nutrients."
+}
+
 
 if uploaded_file is not None:
     img = Image.open(uploaded_file).resize((128, 128))
@@ -90,6 +123,11 @@ if uploaded_file is not None:
         predicted_class = class_names[class_index]
         confidence = np.max(prediction) * 100
 
+        # Show remedy
+        st.write("### 🌱 Recommended Remedy:")
+        st.info(remedies[predicted_class])
+
+
         # Display result
         st.success(f"🌿 Predicted Disease: **{predicted_class}**")
         st.info(f"🧠 Confidence: {confidence:.2f}%")
@@ -102,3 +140,4 @@ if uploaded_file is not None:
 
 st.markdown("---")
 st.caption("Developed by Prerana A S")
+
