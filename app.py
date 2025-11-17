@@ -129,18 +129,20 @@ if uploaded_file is not None:
         # Display result
         st.success(f"🌿 Predicted Disease: **{predicted_class}**")
         st.info(f"🧠 Confidence: {confidence:.2f}%")
-         # Show remedy
-        st.write("🌱 Recommended Remedy:")
-        st.info(remedies[predicted_class])
-
+         
         if "healthy" in predicted_class.lower():
             st.balloons()
             st.write("🎉 The plant looks healthy!")
         else:
             st.warning("⚠️ The plant seems affected. Consider checking treatment options.")
+            # Show remedy
+        st.write("🌱 Recommended Remedy:")
+        st.info(remedies[predicted_class])
+
 
 st.markdown("---")
 st.caption("Developed by Prerana A S")
+
 
 
 
