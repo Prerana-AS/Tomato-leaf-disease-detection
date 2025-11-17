@@ -73,37 +73,69 @@ except Exception as e:
 
 # 📤 File uploader
 uploaded_file = st.file_uploader("Upload a tomato leaf image", type=["jpg", "jpeg", "png"])
+identification={
+    "Tomato___Bacterial_spot": 
+    "• Small, dark, water-soaked spots appear on leaves, which later turn brown with a yellow halo. Leaves look rough, spotted, and may tear. Fruits show raised black scabby spots.",
+
+    "Tomato___Early_blight": 
+    "•Early blight can be identified by brown circular spots with clear concentric rings on tomato leaves, usually starting from the lower leaves and spreading upward. The area around the spots turns yellow, and the leaves eventually dry and fall off, making these target-like lesions the key sign to confirm the disease.",
+
+    "Tomato___Late_blight":
+    "• Late blight shows *large, dark, water-soaked patches* on leaves that spread very fast, often with a *white fuzzy growth* on the underside in humid weather. Leaves collapse quickly, and stems or fruits may also turn brown and rot, making the disease easy to recognize by its rapid damage and irregular wet-looking spots.",
+
+    "Tomato___Leaf_Mold":
+    "•Yellow patches form on the upper leaf surface, and the underside develops *olive-green or gray velvety mold*. Mostly affects older leaves in humid conditions.",
+
+    "Tomato___Septoria_leaf_spot":
+    "•Septoria shows *many small, round brown spots* with *light gray centers* and dark borders, mostly on *lower leaves. Spots are tiny (pinhead size), numerous, and do **not have concentric rings*, which helps differentiate it from early blight.",
+
+    "Tomato___Spider_mites_Two_spotted_spider_mite":
+    "•Leaves show tiny yellow speckles (stippling), eventually turning bronze or dry. Fine webbing is visible on the underside of leaves, especially in hot, dry conditions.",
+
+    "Tomato___Target_Spot":
+    "• Large brown spots with *distinct concentric rings*, similar to early blight but usually larger and more irregular. Spots expand rapidly in warm, wet conditions.",
+
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus":
+    "•This virus causes *upward curling yellow leaves*, stunted growth, and very few flowers or fruits. Leaves become small, brittle, and bunch at the top like a rosette.",
+
+    "Tomato___Tomato_mosaic_virus":
+    "•Mosaic virus causes *mottled light and dark green patterns, distorted or narrow leaves, and sometimes **shriveled, hard fruits*. Growth becomes stunted, and patterns look like “mosaic tiles.",
+
+    "Tomato___healthy":
+    "• Plant is healthy!"
+}
+    
 # 🌿 Remedies for each tomato leaf disease
 remedies = {
     "Tomato___Bacterial_spot": 
-    "• Remove infected leaves.\n• Apply copper-based bactericides.\n• Avoid overhead watering.\n• Practice crop rotation.",
+    "•Remove infected leaves, avoid overhead watering, and improve airflow. Spray copper-based bactericides. Use disease-free seeds, rotate crops, and avoid touching wet plants.",
 
     "Tomato___Early_blight": 
-    "• Remove affected leaves.\n• Spray copper fungicide.\n• Maintain proper spacing between plants.\n• Avoid wetting leaves.",
+    "•To control it, remove infected leaves, avoid wetting the foliage, and ensure good airflow. Spray *neem oil, copper fungicide, or mancozeb* to stop the spread. Use mulch to prevent soil splash, water only at the base, and maintain proper spacing to keep the plants healthy and protected.",
 
     "Tomato___Late_blight":
-    "• Remove and destroy infected plants.\n• Apply mancozeb or chlorothalonil.\n• Improve air circulation.\n• Avoid overhead irrigation.",
+    "•To manage it, remove heavily infected leaves, avoid overhead watering, and improve ventilation. Spray *copper fungicide or mancozeb* for control, keep foliage dry, and avoid touching wet plants. For prevention, use resistant varieties, space plants well, and avoid planting tomatoes in the same soil every year.",
 
     "Tomato___Leaf_Mold":
-    "• Increase ventilation.\n• Apply sulfur or copper fungicide.\n• Keep leaves dry.",
+    "•Increase ventilation, reduce humidity, and water at the base. Use fungicides like copper or chlorothalonil. Space plants properly and avoid overcrowding.",
 
     "Tomato___Septoria_leaf_spot":
-    "• Remove infected leaves.\n• Use copper fungicides.\n• Use drip irrigation.",
+    "•Remove infected leaves, avoid overhead watering, improve airflow, and use fungicides like *copper* or *mancozeb*. Mulch the soil, keep plants spaced, and avoid touching plants when wet.",
 
     "Tomato___Spider_mites_Two_spotted_spider_mite":
-    "• Spray neem oil.\n• Increase humidity.\n• Remove heavily infested leaves.",
+    "•Spray neem oil or insecticidal soap; wash leaves with strong water pressure. Increase humidity, remove heavily damaged leaves, and keep plants well-watered.",
 
     "Tomato___Target_Spot":
-    "• Apply azoxystrobin or mancozeb.\n• Keep foliage dry.\n• Remove diseased leaves.",
+    "•Remove infected leaves and improve airflow. Use fungicides like mancozeb or chlorothalonil. Reduce leaf wetness, mulch the soil, and avoid overcrowding.",
 
     "Tomato___Tomato_Yellow_Leaf_Curl_Virus":
-    "• No cure.\n• Remove infected plants.\n• Control whiteflies using neem oil.\n• Use resistant varieties.",
+    "•Remove infected plants, control *whiteflies* (main carrier) using neem oil or sticky traps, cover plants with insect net, and avoid planting tomatoes near heavily infested areas. Use resistant varieties whenever possible.",
 
     "Tomato___Tomato_mosaic_virus":
-    "• No direct cure.\n• Remove infected plants.\n• Disinfect hands and tools.\n• Avoid tobacco products near plants.",
+    "•There is *no cure*; remove infected plants immediately. Disinfect tools, wash hands after handling tobacco products, control pests, and grow resistant varieties.",
 
     "Tomato___healthy":
-    "• Plant is healthy! Continue regular watering, sunlight and nutrients."
+    "• Continue regular watering, sunlight and nutrients."
 }
 
 
@@ -129,12 +161,14 @@ if uploaded_file is not None:
         # Display result
         st.success(f"🌿 Predicted Disease: **{predicted_class}**")
         st.info(f"🧠 Confidence: {confidence:.2f}%")
+        st.write("🌱 Identification:")
+        st.info(identification[predicted_class])
          
         if "healthy" in predicted_class.lower():
             st.balloons()
             st.write("🎉 The plant looks healthy!")
         else:
-            st.warning("⚠️ The plant seems affected. Consider checking treatment options.")
+            st.warning("⚠️ The plant is affected. Consider checking treatment options.")
             # Show remedy
         st.write("🌱 Recommended Remedy:")
         st.info(remedies[predicted_class])
@@ -142,6 +176,7 @@ if uploaded_file is not None:
 
 st.markdown("---")
 st.caption("Developed by Prerana A S")
+
 
 
 
