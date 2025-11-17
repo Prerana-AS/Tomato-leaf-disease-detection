@@ -172,10 +172,25 @@ if uploaded_file is not None:
             # Show remedy
         st.write("🌱 Recommended Remedy:")
         st.info(remedies[predicted_class])
+        
+
+        st.title("Tomato Leaf Disease Classification – Model Evaluation")
+
+# Accuracy Curve
+        st.subheader("Accuracy and loss Curve")
+        st.image("accuracy and loss.jpg")
+
+
+
+# Confusion Matrix
+        st.subheader("Confusion Matrix")
+        st.image("confusion matrix.jpg")
+
 
 
 st.markdown("---")
 st.caption("Developed by Prerana A S")
+
 
 
 
