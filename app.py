@@ -140,7 +140,12 @@ remedies = {
 
 
 if uploaded_file is not None:
-    img = Image.open(uploaded_file).resize((128, 128))
+    img = Image.open(uploaded_file)
+    # 🔥 FIX: Convert RGBA or grayscale to RGB
+    if img.mode != "RGB":
+        img = img.convert("RGB")
+    img = img.resize((128, 128))
+
     st.image(img, caption="Uploaded Image", use_container_width=True)
 
     if st.button("🔍 Predict Disease"):
@@ -190,6 +195,7 @@ if uploaded_file is not None:
 
 st.markdown("---")
 st.caption("Developed by Prerana A S")
+
 
 
 
