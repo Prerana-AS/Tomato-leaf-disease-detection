@@ -21,7 +21,7 @@ st.title("🍅 Tomato Disease Detection")
 MODEL_PATH = "tomato_disease_model.h5"
 
 # Replace with your Google Drive file ID
-FILE_ID = "1uUP-IPSgeIJxm0AmZiGaJZuR1UShoHWA"
+FILE_ID = "1U9aYUNCEfKLRuYoH9n5OqZpeRQcbpq8Q"
 if not os.path.exists(MODEL_PATH):
     st.info("⏬ Downloading model from Google Drive...")
     gdown.download(f"https://drive.google.com/uc?id={FILE_ID}", MODEL_PATH, quiet=False)
@@ -190,6 +190,7 @@ if uploaded_file is not None:
 
 st.markdown("---")
 st.caption("Developed by Prerana A S")
+
 
 
 
